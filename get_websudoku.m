@@ -1,6 +1,6 @@
 % Open up a webpage
 % puzzleno=4345638452;
-puzzleno=5;
+puzzleno=49;
 url = ['https://www.websudoku.com/?level=4&set_id=',num2str(puzzleno)]; % Evil
 [~, webHandle] = web(url,'-new','-notoolbar');
 % Wait until the web page is loaded. There may be a way to do this
@@ -61,7 +61,7 @@ puzzle.height=uint16( max(boundary(:,2))-puzzle.y);
 puzzle.img=imresize(rgb(puzzle.x:puzzle.x+puzzle.width,puzzle.y:puzzle.height+puzzle.y,:),3);
 figure
 imshow(puzzle.img)
-s=regionprops(imbinarize(rgb2gray(puzzle.img),0.98),'BoundingBox');
+s=regionprops(imbinarize(rgb2gray(puzzle.img),0.8),'BoundingBox');
 bboxes = vertcat(s(:).BoundingBox);
 % Sort boxes by image height
 [~,ord] = sort(bboxes(:,1));
@@ -69,10 +69,11 @@ bboxes = bboxes(ord,:);
 bbox_good=zeros(81,4);
 ii=1;
 for i=1:size(bboxes,1)
-        if bboxes(i,3)> 90 && bboxes(i,3) < 100
+        if bboxes(i,3)> 70 && bboxes(i,3) < 100
             bbox_good(ii,:)=bboxes(i,:);
             ii=ii+1;
         end
+       rectangle('Position',bboxes(i,:),'EdgeColor','r')
 end
 hold on
 for i = 1: length(bbox_good)
@@ -110,11 +111,13 @@ digits(floor(list2(i,2)/box_size)+1,floor(list2(i,1)/box_size)+1)=txtlist(i);
 end
 size(digits);
 % digits
+%%
+
 h.digit=digits;
 h.n=3;
 h.n2=9;
 h.pencil=linspace(1,h.n2,h.n2); 
-h.markup=repmat(reshape(h.pencil,1,1,n2),n2,n2,1);
+h.markup=repmat(reshape(h.pencil,1,1,h.n2),h.n2,h.n2,1);
 
 h=make_pencil(h);
 h=clean_markup(h);

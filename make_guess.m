@@ -6,48 +6,48 @@ markup_size=zeros(h.n2,numel(c));
 for i=1:numel(c)
     markup_size(:,i)=reshape(h.markup(a(i),b(i),:),h.n2,1);
 end
-[~,e]=sort(sum(~~markup_size,1));
+[d,e]=sort(sum(~~markup_size,1));
 % Choose first one with smallest possibility
 g=h;
+solved=0;
+% numel(e)
+for nn=1:numel(e)
+    i=e(nn);
+    choose_digit=g.markup(a(i),b(i),:);
+    choose_digit=choose_digit(~~choose_digit);
+    for nnn=1:d(nn)
+        choosen_digit=choose_digit(nnn)
+        g.digit(a(i),b(i))=choosen_digit;
+        g.markup(a(i),b(i),:)=0;
+        g=clean_markup(g);
+        
+        while ~solved
+    
+            [g,change]=solve1(g);
+            if change==0 
+                [g,change]=solve2(g);
+                if change==0
+                    g=make_guess(g);
+                end        
+            end
+            display_grid(g)
+            pause(1.5);
 
-i=e(1);
-choose_digit=g.markup(a(i),b(i),:);
-choose_digit=choose_digit(~~choose_digit);
-choose_digit=choose_digit(1)
-g.digit(a(i),b(i))=choose_digit;
-g.markup(a(i),b(i),:)=0;
-% g=solve1(g);
-g=clean_markup(g);
-g=solve1(g);
-g=solve1(g);
-display_grid(g);
-pause(3);
-[tempa,tempb,tempc]=find(g.digit==0);
-markup_size=zeros(h.n2,numel(tempc));
-for i=1:numel(tempc)
-    markup_size(:,i)=reshape(g.markup(tempa(i),tempb(i),:),h.n2,1);
-end
-[tempd,tempe]=sort(sum(~~markup_size,1));
-if numel(tempd)>0
-if tempd(1)==0 %% mismatch empty markup with undefined digit
-    g=h;
-
-    i=e(1);
-choose_digit=g.markup(a(i),b(i),:);
-choose_digit=choose_digit(~~choose_digit);
-choose_digit=choose_digit(2);
-g.digit(a(i),b(i))=choose_digit;
-g.markup(a(i),b(i),:)=0;
-g=solve1(g);
-g=clean_markup(g);
-g=solve1(g);
-g=solve1(g);
-end
-else
-    h=g;
-end
-display_grid(g);
-pause(3);
-% g.markup
-
+            con=check_conflict(g);
+            if con==1
+                g=h;
+                continue;
+            elseif check_solved(g)
+                continue;
+            else
+                h=g;
+                display_grid(g);
+                pause(3);
+                return
+            end
+        end
+        display_grid(g);
+        pause(3);
+%         g.markup
+    end
 end
