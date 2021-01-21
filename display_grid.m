@@ -14,17 +14,18 @@ ylim([y_i y_f]);
 hold all
 % draw lines
 for i=0:n2+1
-aa=line([x_i x_f],[0.5 0.5]+i);
+
 if mod(i,n)==0
-    aa.LineWidth=LW;
-    aa.Color=LC;
+  aa=line([x_i x_f],[0.5 0.5]+i,'LineWidth',LW,'Color',LC);
+  else
+    aa=line([x_i x_f],[0.5 0.5]+i);
 end
 end
 for j=0:n2+1
-aa=line([0.5 0.5]+j ,[y_i y_f]);
 if mod(j,n)==0
-    aa.LineWidth=LW;
-    aa.Color=LC;
+    aa=line([0.5 0.5]+j ,[y_i y_f],'LineWidth',LW,'Color',LC);
+  else
+    aa=line([0.5 0.5]+j ,[y_i y_f]);
 end
 end
 % fill up grid
